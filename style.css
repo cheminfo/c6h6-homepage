@@ -1,3 +1,7 @@
+* {
+  font-family: system-ui;
+}
+
 div.closed {
   height: 0;
   overflow: hidden;
@@ -7,10 +11,10 @@ div.opened {
   height: auto;
 }
 
-h1 {
+h2.label {
   margin: 1px 0;
   padding: 10px 4px;
-  background-color: lightblue;
+  background-color: #eaeaea;
   cursor: pointer;
 }
 
@@ -48,23 +52,16 @@ h1 {
   z-index: 100;
 }
 
-/*
-.on-tabs-tiles .fa, .ci-icon {
-    font-size: 8em;
-    
-}
-*/
-
 .on-tabs-tiles .cell .main {
   margin: auto;
 }
 
 .on-tabs-tiles .cell .huge {
-  font-size: 6em;
+  font-size: 4em;
 }
 
 .on-tabs-tiles .cell .large {
-  font-size: 4em;
+  font-size: 3em;
 }
 
 .on-tabs-tiles .cell .medium {
@@ -78,7 +75,7 @@ h1 {
 
 .on-tabs-tiles .cell .header {
   position: absolute;
-  font-size: 1.4em;
+  font-size: 0.9em;
   font-weight: bold;
   text-align: center;
   width: 100%;
@@ -91,9 +88,7 @@ h1 {
   left: 0;
   text-align: center;
   width: 100%;
-  /* white-space: pre; */
   font-size: 10px;
-  /*overflow: hidden;*/
   margin-bottom: 4px;
 }
 
@@ -117,8 +112,8 @@ h1 {
   top: 10px;
   width: 120px;
   background-color: rgba(255, 0, 0, 0.9);
-  z-index: 10;
 }
 .on-tabs-tiles .ribbon.beta {
   background-color: rgba(0, 0, 255, 0.9);
+  z-index: 101;
 }

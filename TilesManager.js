@@ -17,7 +17,13 @@ const defaultOptions = {
 };
 
 class TilesManager {
-  constructor(divID, labels = [], tiles = [], initialTabStates = [], options = {}) {
+  constructor(
+    divID,
+    labels = [],
+    tiles = [],
+    initialTabStates = [],
+    options = {}
+  ) {
     this.labels = labels;
     this.tiles = tiles;
     this.initialTabStates = initialTabStates;
@@ -26,7 +32,13 @@ class TilesManager {
   }
 
   repaint() {
-    repaint(this.divID, this.labels, this.tiles, this.initialTabStates, this.options);
+    repaint(
+      this.divID,
+      this.labels,
+      this.tiles,
+      this.initialTabStates,
+      this.options
+    );
   }
 }
 
@@ -46,8 +58,10 @@ function repaint(divID, labels, tabsTiles, initialTabStates, options) {
 function buildTab(id, label, tiles, state, options) {
   const $mainContainer = $(`<div id="container_${label}">`);
 
-  const $label = $(`<h1 class="label" id="label_${label}">${label}</h1>`);
-  const $tileContainer = $(`<div class="${state == 1 ? "opened" : "closed"}">`);
+  const $label = $(`<h2 class="label" id="label_${label}">${label}</h2>`);
+  const $tileContainer = $(
+    `<div class="tile_container ${state == 1 ? "opened" : "closed"}">`
+  );
 
   $tileContainer.addClass("on-tabs-tiles");
   if (!tiles) {
@@ -75,7 +89,10 @@ function buildTab(id, label, tiles, state, options) {
 
     $mainContainer.siblings().children(".opened").toggleClass("opened closed");
 
-    window.localStorage.setItem("opened_tab",  $tileContainer.hasClass("opened") ? id:undefined);
+    window.localStorage.setItem(
+      "opened_tab",
+      $tileContainer.hasClass("opened") ? id : undefined
+    );
   });
 
   $mainContainer.append($label);
@@ -84,11 +101,10 @@ function buildTab(id, label, tiles, state, options) {
   return $mainContainer;
 
   function getTile(tile, idx) {
-    // tile.line = lineCount;
     if (Object.keys(tile).length === 1) {
-      // lineCount++;
       return '<div style="width: 100%"></div>';
     }
+    
     if (!options.shouldRender(tile)) return "";
     const ribbon = options.ribbon(tile);
     const active = options.isActive(tile);
@@ -105,7 +121,7 @@ function buildTab(id, label, tiles, state, options) {
     const $el = $(`
                 <div class="cell ${active ? "active" : "inactive"}">
                     <div class='content'>
-                        <div class='header'>${header || ""}</div>
+                     <h5 class='header'>${header || ""}</h5>
                         ${
                           icon
                             ? `<div class="${iconType} ${icon} icon main huge"></div>`
