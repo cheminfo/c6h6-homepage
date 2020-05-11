@@ -1,3 +1,19 @@
+div.closed {
+  height: 0;
+  overflow: hidden;
+}
+
+div.opened {
+  height: auto;
+}
+
+h1 {
+  margin: 1px 0;
+  padding: 10px 4px;
+  background-color: lightblue;
+  cursor: pointer;
+}
+
 .on-tabs-tiles {
   display: inline-flex;
   flex-wrap: wrap;

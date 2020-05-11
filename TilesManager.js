@@ -3,7 +3,7 @@ const defaultOptions = {
     console.log(target);
   },
   isNewTabLink: () => false,
-  ribbon: () => '',
+  ribbon: () => "",
   isLink: () => true,
   isActive: () => true,
   shouldRender: () => true,
@@ -17,53 +17,79 @@ const defaultOptions = {
 };
 
 class TilesManager {
-  constructor(divID, tiles = [], options = {}) {
+  constructor(divID, labels = [], tiles = [], initialTabStates = [], options = {}) {
+    this.labels = labels;
     this.tiles = tiles;
+    this.initialTabStates = initialTabStates;
     this.divID = divID;
     this.options = { ...defaultOptions, ...options };
   }
 
   repaint() {
-    repaint(this.divID, this.tiles, this.options);
+    repaint(this.divID, this.labels, this.tiles, this.initialTabStates, this.options);
   }
 }
 
-function repaint(divID, tiles, options) {
-  let lineCount = 0;
-  const $div = $('#' + divID);
-  console.log($div);
-
+function repaint(divID, labels, tabsTiles, initialTabStates, options) {
+  const $div = $("#" + divID);
   $div.empty();
-  const $main = $('<div>');
-  $div.append($main);
-  if (!tiles) {
-    $div.append('No tiles');
-    return;
-  }
-  $main.addClass('on-tabs-tiles');
-  $main.append(tiles.map(getTile));
 
-  $main.on('click', function (event) {
+  for (let index = 0; index < labels.length; index++) {
+    const label = labels[index];
+    const tiles = tabsTiles[index];
+    const state = initialTabStates[index];
+    const $tab = buildTab(index, label, tiles, state, options);
+    $div.append($tab);
+  }
+}
+
+function buildTab(id, label, tiles, state, options) {
+  const $mainContainer = $(`<div id="container_${label}">`);
+
+  const $label = $(`<h1 class="label" id="label_${label}">${label}</h1>`);
+  const $tileContainer = $(`<div class="${state == 1 ? "opened" : "closed"}">`);
+
+  $tileContainer.addClass("on-tabs-tiles");
+  if (!tiles) {
+    $tileContainer.append("No tiles");
+  } else {
+    $tileContainer.append(tiles.map(getTile));
+  }
+
+  $tileContainer.on("click", function (event) {
     let $el;
-    if ($(event.target).hasClass('cell')) {
+    if ($(event.target).hasClass("cell")) {
       $el = $(event.target);
     } else {
-      $el = $(event.target).parents('.cell').first();
+      $el = $(event.target).parents(".cell").first();
     }
-    let idx = $el.attr('data-idx');
+    let idx = $el.attr("data-idx");
     const tile = tiles[idx];
     if (tile && options.isActive(tile) && !options.isNewTabLink(tile)) {
       options.onTileClick(event, tile, $el);
     }
   });
 
+  $label.on("click", function (event) {
+    $tileContainer.toggleClass("closed opened");
+
+    $mainContainer.siblings().children(".opened").toggleClass("opened closed");
+
+    window.localStorage.setItem("opened_tab",  $tileContainer.hasClass("opened") ? id:undefined);
+  });
+
+  $mainContainer.append($label);
+  $mainContainer.append($tileContainer);
+
+  return $mainContainer;
+
   function getTile(tile, idx) {
-    tile.line = lineCount;
+    // tile.line = lineCount;
     if (Object.keys(tile).length === 1) {
-      lineCount++;
+      // lineCount++;
       return '<div style="width: 100%"></div>';
     }
-    if (!options.shouldRender(tile)) return '';
+    if (!options.shouldRender(tile)) return "";
     const ribbon = options.ribbon(tile);
     const active = options.isActive(tile);
     const header = options.header(tile);
@@ -77,21 +103,21 @@ function repaint(divID, tiles, options) {
     let iconType = /(fa|ci-icon)-/.exec(icon);
     if (iconType) iconType = iconType[1];
     const $el = $(`
-                <div class="cell ${active ? 'active' : 'inactive'}">
+                <div class="cell ${active ? "active" : "inactive"}">
                     <div class='content'>
-                        <div class='header'>${header || ''}</div>
+                        <div class='header'>${header || ""}</div>
                         ${
                           icon
                             ? `<div class="${iconType} ${icon} icon main huge"></div>`
                             : `<div class="title main ${size}">${
-                                title || ''
+                                title || ""
                               }</div>`
                         }
-                        <div class="footer">${footer || ''}</div>
+                        <div class="footer">${footer || ""}</div>
                         ${
                           ribbon
                             ? `<div class="ribbon-wrapper"><div class="ribbon beta">${ribbon}</div></div>`
-                            : ''
+                            : ""
                         }
                     </div>
                 </div>
@@ -100,16 +126,16 @@ function repaint(divID, tiles, options) {
     $el.css({
       color: options.color(tile),
       backgroundColor: options.backgroundColor(tile),
-      cursor: active && options.isLink(tile) ? 'pointer' : 'inherit',
+      cursor: active && options.isLink(tile) ? "pointer" : "inherit",
     });
 
     $el.attr({
-      'data-idx': idx,
+      "data-idx": idx,
     });
     if (newTabLink && active && href) {
       return $el
         .wrap(
-          `<a href="${href}" target="_blank" style="text-decoration: none; color: initial;" />`,
+          `<a href="${href}" target="_blank" style="text-decoration: none; color: initial;" />`
         )
         .parent();
     }
@@ -117,14 +143,14 @@ function repaint(divID, tiles, options) {
   }
 
   function getSize(text) {
-    if (text === undefined) return 'huge';
+    if (text === undefined) return "huge";
     const asText = String(text);
     if (asText.length <= 3) {
-      return 'huge';
+      return "huge";
     } else if (asText.length <= 6) {
-      return 'large';
+      return "large";
     } else {
-      return 'medium';
+      return "medium";
     }
   }
 }

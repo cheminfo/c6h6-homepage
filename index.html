@@ -60,12 +60,25 @@
     };
 
     // TEMPORARY HTTPS://GOO.GL/MAPS/71MNJA5ZL2S2 to FLATTEN ALL tILES
-    let flatTiles = [];
+    let tabTiles = [];
+    let labels = []
+    let tabState = []
+  
+    openedTab = parseInt(window.localStorage.getItem("opened_tab"));
+    console.log(parseInt(openedTab));
+    
     for (let tileSet of tiles) {
-      flatTiles.push(...tileSet.tiles);
+      tabTiles.push(tileSet.tiles);
+      labels.push(tileSet.label)
+      tabState.push(0)
     }
+    tabState[openedTab] = 1
 
-    let tilesManager = new TilesManager("tilesDiv", flatTiles, options);
+  
+     
+    
+
+    let tilesManager = new TilesManager("tilesDiv", labels, tabTiles,tabState, options);
     tilesManager.repaint();
   </script>
 </html>
