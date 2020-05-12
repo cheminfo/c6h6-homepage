@@ -12,12 +12,21 @@ div.opened {
 }
 
 h2.label {
-  margin: 1px 0;
+  margin: 0 1px;
   padding: 10px 4px;
   background-color: #eaeaea;
   cursor: pointer;
 }
 
+#tilesDiv {
+  display: flex;
+  flex-direction: row;
+}
+
+#tilesDiv > div {
+  flex-grow: 1;
+  flex-basis: 0;
+}
 .on-tabs-tiles {
   display: inline-flex;
   flex-wrap: wrap;
