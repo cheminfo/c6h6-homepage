@@ -55,10 +55,37 @@ function repaint(divID, labels, tabsTiles, initialTabStates, options) {
   }
 }
 
+function renderTabTiles(tiles) {
+  const $tileContainer = $(`<div id="tile_container">`);
+  $tileContainer.addClass("on-tabs-tiles");
+  if (!tiles) {
+    $tileContainer.append("No tiles");
+  } else {
+    $tileContainer.append(tiles.map(getTile));
+  }
+  $tileContainer.on("click", function (event) {
+    let $el;
+    if ($(event.target).hasClass("cell")) {
+      $el = $(event.target);
+    } else {
+      $el = $(event.target).parents(".cell").first();
+    }
+    let idx = $el.attr("data-idx");
+    const tile = tiles[idx];
+    if (tile && options.isActive(tile) && !options.isNewTabLink(tile)) {
+      options.onTileClick(event, tile, $el);
+    }
+  });
+  $div.append($tileContainer);
+}
 function buildTab(id, label, tiles, state, options) {
   const $mainContainer = $(`<div id="container_${label}">`);
 
-  const $label = $(`<h2 class="label" id="label_${label}">${label}</h2>`);
+  const $label = $(
+    `<h2 class="label ${
+      state == 1 && "selected"
+    }" id="label_${label}">${label}</h2>`
+  );
   const $tileContainer = $(
     `<div class="tile_container ${state == 1 ? "opened" : "closed"}">`
   );
@@ -86,8 +113,10 @@ function buildTab(id, label, tiles, state, options) {
 
   $label.on("click", function (event) {
     $tileContainer.toggleClass("closed opened");
+    $label.toggleClass("selected");
 
     $mainContainer.siblings().children(".opened").toggleClass("opened closed");
+    $mainContainer.siblings().children(".selected").toggleClass("selected");
 
     window.localStorage.setItem(
       "opened_tab",
@@ -104,7 +133,7 @@ function buildTab(id, label, tiles, state, options) {
     if (Object.keys(tile).length === 1) {
       return '<div style="width: 100%"></div>';
     }
-    
+
     if (!options.shouldRender(tile)) return "";
     const ribbon = options.ribbon(tile);
     const active = options.isActive(tile);

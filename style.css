@@ -18,6 +18,11 @@ h2.label {
   cursor: pointer;
 }
 
+h2.selected{
+  background-color: gray;
+  color: white;
+}
+
 #tilesDiv {
   display: flex;
   flex-direction: row;
