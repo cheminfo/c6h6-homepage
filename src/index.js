@@ -17,23 +17,18 @@ const defaultOptions = {
 };
 
 const defaultDivs = {
-  navigation: 'navigation',
-  content: 'content'
-}
+  navigation: "navigation",
+  content: "content",
+};
 
 class TilesManager {
-  constructor(
-    divs = defaultDivs,
-    labels = [],
-    tiles = [],
-    initialTabStates = [],
-    options = {}
-  ) {
-    this.labels = labels;
-    this.tiles = tiles;
-    this.initialTabStates = initialTabStates;
+  constructor(divs = defaultDivs, categories = [], options = {}) {
+    this.labels = categories.map((category) => category.label);
+    this.tiles = categories.map((category) => category.tiles);
     this.navigations = divs;
     this.options = { ...defaultOptions, ...options };
+
+    this.openTab = parseInt(window.localStorage.getItem("tocOpenTab") || 0);
   }
 
   repaint() {
@@ -41,20 +36,20 @@ class TilesManager {
       this.navigations,
       this.labels,
       this.tiles,
-      this.initialTabStates,
+      this.openTab,
       this.options
     );
   }
 }
 
-function repaint({ navigation, content }, labels, tabsTiles, initialTabStates, options) {
+function repaint({ navigation, content }, labels, tabsTiles, openTab, options) {
   const $div = $(`#${navigation}`);
   $div.empty();
 
   for (let index = 0; index < labels.length; index++) {
     const label = labels[index];
     const tiles = tabsTiles[index];
-    const state = initialTabStates[index];
+    const state = openTab === index;
     const $tab = buildTab(index, label, tiles, state, options);
     $div.append($tab);
   }
@@ -68,13 +63,15 @@ function buildTab(id, label, tiles, state, options) {
       state == 1 && "selected"
     }" id="label_${label}">${label}</h2>`
   );
-  
+
   const $tileContainer = $(
-    `<div class="tile_container container_${label} ${state == 1 ? "opened" : "closed"}">`
+    `<div class="tile_container container_${label} ${
+      state == 1 ? "opened" : "closed"
+    }">`
   );
-  
+
   $tileContainer.addClass("on-tabs-tiles");
-  $tileContainer.append(!tiles ? 'No tiles' : tiles.map(getTile))
+  $tileContainer.append(!tiles ? "No tiles" : tiles.map(getTile));
 
   $tileContainer.on("click", function (event) {
     let $el;
@@ -89,10 +86,9 @@ function buildTab(id, label, tiles, state, options) {
       options.onTileClick(event, tile, $el);
     }
   });
-  
 
   $label.on("click", function (event) {
-    $(".opened").toggleClass("opened closed")
+    $(".opened").toggleClass("opened closed");
 
     $tileContainer.toggleClass("closed opened");
     $label.toggleClass("selected");
@@ -100,12 +96,12 @@ function buildTab(id, label, tiles, state, options) {
     $mainContainer.siblings().children(".selected").toggleClass("selected");
 
     window.localStorage.setItem(
-      "opened_tab",
+      "tocOpenTab",
       $tileContainer.hasClass("opened") ? id : undefined
     );
   });
 
-  $mainContainer.append($label); 
+  $mainContainer.append($label);
   $("#content").append($tileContainer);
 
   return $mainContainer;

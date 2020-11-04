@@ -65,17 +65,9 @@
       let labels = []
       let tabState = []
     
-      openedTab = parseInt(window.localStorage.getItem("opened_tab") || 0);
-    
-      for (let tileSet of categories) {
-        tabTiles.push(tileSet.tiles);
-        labels.push(tileSet.label)
-        tabState.push(0)
-      }
 
-      tabState[openedTab] = 1
 
-      let tilesManager = new TilesManager({ navigation: 'navigation', content: 'content' }, labels, tabTiles,tabState, options);
+      let tilesManager = new TilesManager({ navigation: 'navigation', content: 'content' }, categories, options);
       
       tilesManager.repaint();
     </script>
