@@ -46,7 +46,6 @@
         isLink: (tile) => true,
         icon: (tile) => tile.icon,
         title: (tile) => {
-          console.log("TITLE");
           return tile.title
             ? typeof tile.title === "function"
               ? tile.title()
@@ -62,15 +61,13 @@
         },
       };
 
-      // TEMPORARY HTTPS://GOO.GL/MAPS/71MNJA5ZL2S2 to FLATTEN ALL tILES
       let tabTiles = [];
       let labels = []
       let tabState = []
     
-      openedTab = parseInt(window.localStorage.getItem("opened_tab"));
-      console.log(parseInt(openedTab));
+      openedTab = parseInt(window.localStorage.getItem("opened_tab") || 0);
     
-      for (let tileSet of tiles) {
+      for (let tileSet of categories) {
         tabTiles.push(tileSet.tiles);
         labels.push(tileSet.label)
         tabState.push(0)
