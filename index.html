@@ -14,7 +14,7 @@
     
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script src="./src/data/fake.data.js"></script>
-    <script src="./src/index.js"></script>
+    <script src="./src/TilesManager.js"></script>
   </head>
   <body>
     <div id='app' class='h-full w-full flex flex-col'>
@@ -60,11 +60,6 @@
           console.log({ event, tile });
         },
       };
-
-      let tabTiles = [];
-      let labels = []
-      let tabState = []
-    
 
 
       let tilesManager = new TilesManager({ navigation: 'navigation', content: 'content' }, categories, options);
